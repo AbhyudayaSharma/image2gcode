@@ -2,19 +2,20 @@
   "name": "svg2gcode",
   "version": "0.0.4",
   "description": "Convert SVG to Gcode",
-  "bin": {
-    "svg2gcode": "./bin/svg2gcode"
-  },
   "dependencies": {
     "canvg": "0.0.6",
-    "commander": "^2.5.0",
+    "commander": "^2.19.0",
     "eslint": "^5.8.0",
     "eslint-config-google": "^0.11.0",
-    "gcanvas": "0.0.*"
+    "gcanvas": "0.0.37",
+    "potrace": "^2.1.1"
+  },
+  "scripts": {
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "em/svg2gcode"
+    "url": "https://github.com/AbhyudayaSharma/image2gcode.git"
   },
   "keywords": [
     "svg",
@@ -22,9 +23,9 @@
     "cnc",
     "milling"
   ],
-  "author": "Emery Denuccio",
-  "contributors": [
-    "Abhyudaya Sharma"
-  ],
-  "license": "MIT"
+  "author": "Abhyudaya SHarma",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  }
 }

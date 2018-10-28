@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 'use strict';
 
 const fs = require('fs');
@@ -12,7 +11,17 @@ const canvg = require('canvg');
  * @return {String} A string containing the gcode
  */
 const getGcode = (filePath, options) => {
+  let ret = '';
+  if (require.main != module) {
+    // hijack console.log if not running as the main module
+    // process the data being sent to console as a String
+    console.log = (msg) => {
+      ret += msg + '\n';
+    };
+  }
+
   const gctx = new GCanvas();
+
   const svg = fs.readFileSync(filePath).toString();
   const canvgOptions = {};
 
@@ -68,17 +77,8 @@ const getGcode = (filePath, options) => {
     };
   }
 
-  let x = '';
-  if (require.main != module) {
-    // hijack console.log if not running as the main module
-    // process the data being sent to console as a String
-    console.log = (msg) => {
-      x += msg + '\n';
-    };
-  }
-
   canvg(gctx.canvas, svg, canvgOptions);
-  return x + 'M30\n';
+  return ret + 'M30\n';
 };
 
 if (require.main == module) {
