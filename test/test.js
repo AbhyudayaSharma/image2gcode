@@ -1,4 +1,4 @@
-// const svg2gcode = require('../bin/svg2gcode');
+const svg2gcode = require('../src/svg2gcode');
 const assert = require('assert');
 
 describe('Convert to svg', () => {
@@ -32,15 +32,22 @@ describe('Convert to svg', () => {
   });
 });
 
-// describe('Get GCode from SVG', () => {
-//   describe('star.svg', () => {
-//     it('should not be empty and contain valid GCode', () => {
-//       console.log('running test');
-//       const gcode = svg2gcode.getGcode('./test/star.svg', {toolDiameter: 1});
-//       console.log(gcode);
-//       assert.strictEqual(gcode.indexOf('ERROR'), -1);
-//       assert.notStrictEqual(gcode.indexOf('G1', -1));
-//       assert.notStrictEqual(gcode.indexOf('G0'), -1);
-//     });
-//   });
-// });
+describe('Get GCode from SVG', () => {
+  describe('star.svg', () => {
+    it('should not be empty and contain valid GCode', (done) => {
+      console.log('running test');
+      const promise = svg2gcode.getGcode('./test/star.svg',
+          {toolDiameter: 1});
+      promise
+          .then((data) => {
+            assert.strictEqual(data.indexOf('ERROR'), -1);
+            assert.notStrictEqual(data.indexOf('G1'), -1);
+            assert.notStrictEqual(data.indexOf('G0'), -1);
+            done();
+          })
+          .catch((err) => {
+            done(err);
+          });
+    });
+  });
+});

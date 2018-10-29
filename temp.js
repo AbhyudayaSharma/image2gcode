@@ -1,13 +1,17 @@
-const gcode = require('./bin/svg2gcode');
+const gcode = require('./src/svg2gcode');
 const potrace = require('potrace');
 const fs = require('fs');
 
-potrace.trace('./test/lines.png', (err, svg) => {
+potrace.trace('./test/lines.png', async (err, svg) => {
   if (err) {
     throw err;
   }
   fs.writeFileSync('./test.svg', svg);
-  fs.writeFileSync('./test.gcode', gcode.getGcode('./test.svg',
-      {toolDiameter: 1}));
-  process.exit(0);
+  const ret = await gcode.getGcode('./test.svg', {toolDiameter: 1});
+  fs.writeFile('./test.gcode', ret, (err) => {
+    if (err) {
+      console.log(err);
+    }
+    process.exit(0);
+  });
 });

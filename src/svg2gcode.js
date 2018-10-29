@@ -5,21 +5,23 @@ const GCanvas = require('gcanvas');
 const canvg = require('canvg');
 
 /**
- * Returns the gcode
+ * Generates Gcode from an svg
+ * TODO: Process.exit() is required when running this code
  * @param {String} filePath The path to the svg file
  * @param {*} options options for the GCode
- * @return {String} A string containing the gcode
+ * @return {Promise} A promise containing the gcode as a String
  */
 const getGcode = (filePath, options) => {
   let ret = '';
+  let oldLog = null;
   if (require.main != module) {
     // hijack console.log if not running as the main module
     // process the data being sent to console as a String
+    oldLog = console.log;
     console.log = (msg) => {
       ret += msg + '\n';
     };
   }
-
   const gctx = new GCanvas();
 
   const svg = fs.readFileSync(filePath).toString();
@@ -77,8 +79,14 @@ const getGcode = (filePath, options) => {
     };
   }
 
-  canvg(gctx.canvas, svg, canvgOptions);
-  return ret + 'M30\n';
+  return new Promise((resolve, reject) => {
+    canvg(gctx.canvas, svg, canvgOptions);
+    ret += 'M30\n';
+    if (oldLog != null) {
+      console.log = oldLog;
+    }
+    resolve(ret);
+  });
 };
 
 if (require.main == module) {
