@@ -6,7 +6,9 @@ const canvg = require('canvg');
 
 /**
  * Generates Gcode from an svg
- * TODO: Process.exit() is required when running this code
+ * DO NOT USE THIS FUNCTION: Use the <code>gcodeGenerator</code>
+ * in gcodegenerator.js.
+ * This function causes a ghost thread to run asynchronously
  * @param {String} filePath The path to the svg file
  * @param {*} options options for the GCode
  * @return {Promise} A promise containing the gcode as a String
@@ -22,8 +24,8 @@ const getGcode = (filePath, options) => {
       ret += msg + '\n';
     };
   }
-  const gctx = new GCanvas();
 
+  const gctx = new GCanvas();
   const svg = fs.readFileSync(filePath).toString();
   const canvgOptions = {};
 
@@ -111,6 +113,7 @@ if (require.main == module) {
   program.parse(process.argv);
 
   const options = {};
+  const canvgOptions = {};
   if (program.speed) options.speed = program.speed;
   if (program.feed) options.feed = program.feed;
   if (program.depth) options.depth = program.depth;
@@ -118,6 +121,8 @@ if (require.main == module) {
   if (program.top) options.top = program.top;
   if (program.above) options.aboveTop = program.above;
   if (program.tooldiameter) options.toolDiameter = program.tooldiameter;
+  if (program.width) canvgOptions.scaleHeight = program.height;
+  if (program.height) canvgOptions.scaleWidth = program.width;
 
   if (program.args.length === 0 && process.stdin.isTTY) {
     program.outputHelp();

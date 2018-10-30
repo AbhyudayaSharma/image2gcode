@@ -1,4 +1,4 @@
-const svg2gcode = require('../src/svg2gcode');
+const gcodeGenerator = require('../src/gcodegenerator');
 const assert = require('assert');
 
 describe('Convert to svg', () => {
@@ -35,8 +35,7 @@ describe('Convert to svg', () => {
 describe('Get GCode from SVG', () => {
   describe('star.svg', () => {
     it('should not be empty and contain valid GCode', (done) => {
-      console.log('running test');
-      const promise = svg2gcode.getGcode('./test/star.svg',
+      const promise = gcodeGenerator.generateGCode('./test/star.svg',
           {toolDiameter: 1});
       promise
           .then((data) => {
