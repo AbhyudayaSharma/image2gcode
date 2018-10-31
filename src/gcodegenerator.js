@@ -55,11 +55,20 @@ const generateGCode = async (filePath, options) => {
     generatorArgs.push('--positive');
   }
 
-  return new Promise((resolve, reject) => {
-    generatorArgs.push('./test/star.svg');
+  return new Promise(async (resolve, reject) => {
+    const path = require('path');
+    const ext = path.extname(filePath);
+    if (ext === '.jpg' || ext === '.jpeg' || ext === '.png') {
+      const imageUtils = require('./imageutils');
+      filePath = await imageUtils.flipImage(filePath);
+      filePath = await imageUtils.getSVG(filePath);
+    } else if (ext !== '.svg') {
+      reject(new Error('Unsupported file type'));
+    }
+    generatorArgs.push(filePath);
     const child = spawnSync('node', generatorArgs,
-        {shell: true, stdio: ['inherit', 'pipe', 'pipe', 'pi']});
-    resolve(child.stdout.toString());
+        {shell: true, stdio: ['inherit', 'pipe', 'pipe', 'pipe']});
+    resolve(child.stdout.toString() + 'M30\n');
   });
 };
 

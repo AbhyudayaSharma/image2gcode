@@ -3,3 +3,8 @@ node_modules
 
 # generated GCode files
 *.gcode
+
+# files created during testing
+*-flipped*
+lines.svg
+test.svg

@@ -1,33 +1,27 @@
 const gcodeGenerator = require('../src/gcodegenerator');
+const imageUtils = require('../src/imageutils');
 const assert = require('assert');
 
 describe('Convert to svg', () => {
-  const potrace = require('potrace');
   describe('Test jpg files', () => {
-    it('output should not be empty', (done) => {
+    it('output should not be empty', () => {
       // check if file exists
       const file = './test/lines.jpg';
       require('fs').exists(file, (exists) => {
         assert.equal(exists, true);
       });
-      potrace.trace(file, (err, svg) => {
-        if (err) done(err);
-        done();
-      });
+      return imageUtils.getSVG(file);
     });
   });
 
   describe('Test png files', () => {
-    it('output should not be empty', (done) => {
+    it('output should not be empty', () => {
       // check if file exists
       const file = './test/lines.png';
       require('fs').exists(file, (exists) => {
         assert.equal(exists, true);
       });
-      potrace.trace(file, (err, svg) => {
-        if (err) done(err);
-        done();
-      });
+      return imageUtils.getSVG(file);
     });
   });
 });
@@ -47,6 +41,37 @@ describe('Get GCode from SVG', () => {
           .catch((err) => {
             done(err);
           });
+    });
+  });
+});
+
+describe('Flip image', () => {
+  describe('Flip jpg files', () => {
+    it('output should not be empty', async () => {
+      // check if file exists
+      const file = './test/lines.jpg';
+      require('fs').exists(file, (exists) => {
+        assert.strictEqual(exists, true);
+      });
+      const flippedFile = await imageUtils.flipImage(file);
+      require('fs').exists(flippedFile, (exists) => {
+        assert.strictEqual(exists, true);
+      });
+    });
+  });
+
+  describe('Flip png files', () => {
+    it('output should not be empty', async () => {
+      // check if file exists
+      const file = './test/lines.png';
+      const flippedFile = './test/lines-flipped.png';
+      require('fs').exists(file, (exists) => {
+        assert.strictEqual(exists, true);
+      });
+      await imageUtils.flipImage(file, flippedFile);
+      require('fs').exists(flippedFile, (exists) => {
+        assert.strictEqual(exists, true);
+      });
     });
   });
 });
