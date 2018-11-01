@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Generates GCode on the given svg filepath
+ * Generates GCode on the given svg filePath
  * @param {String} filePath the path to the svg
  * @param {any} options Options for generating the GCode
  * @return {Promise} promise containing the generated GCode
@@ -69,7 +69,7 @@ const generateGCode = async (filePath, options) => {
     generatorArgs.push(filePath);
     const child = spawnSync('node', generatorArgs,
         {shell: true, stdio: ['inherit', 'pipe', 'pipe', 'pipe']});
-    resolve(child.stdout.toString() + 'M30\n');
+    resolve('F50\n' + child.stdout.toString() + 'M30\n');
   });
 };
 
