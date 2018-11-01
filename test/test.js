@@ -53,7 +53,7 @@ describe('Flip image', () => {
       require('fs').exists(file, (exists) => {
         assert.strictEqual(exists, true);
       });
-      const flippedFile = await imageUtils.flipImage(file);
+      const flippedFile = await imageUtils.flipAndScaleImage(file);
       require('fs').exists(flippedFile, (exists) => {
         assert.strictEqual(exists, true);
       });
@@ -68,7 +68,7 @@ describe('Flip image', () => {
       require('fs').exists(file, (exists) => {
         assert.strictEqual(exists, true);
       });
-      await imageUtils.flipImage(file, flippedFile);
+      await imageUtils.flipAndScaleImage(file, flippedFile);
       require('fs').exists(flippedFile, (exists) => {
         assert.strictEqual(exists, true);
       });

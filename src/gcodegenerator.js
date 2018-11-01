@@ -60,7 +60,8 @@ const generateGCode = async (filePath, options) => {
     const ext = path.extname(filePath);
     if (ext === '.jpg' || ext === '.jpeg' || ext === '.png') {
       const imageUtils = require('./imageutils');
-      filePath = await imageUtils.flipImage(filePath);
+      filePath = await imageUtils.
+          flipAndScaleImage(filePath, null, options.width, options.height);
       filePath = await imageUtils.getSVG(filePath);
     } else if (ext !== '.svg') {
       reject(new Error('Unsupported file type'));
