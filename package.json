@@ -3,6 +3,7 @@
   "version": "0.0.4",
   "description": "Convert SVG to Gcode",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "canvg": "0.0.6",
     "commander": "^2.19.0",
     "eslint": "^5.8.0",
