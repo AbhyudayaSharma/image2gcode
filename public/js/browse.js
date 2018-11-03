@@ -17,7 +17,6 @@ function buttonClicked() {
   if (window.File && window.FileReader && window.FileList && window.Blob) {
     alert('Supported');
   }
-  console.log(`clicked ${file}`);
 }
 
 /**
