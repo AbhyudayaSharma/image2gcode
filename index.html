@@ -19,9 +19,14 @@
       <input type="file" accept=".png, .jpeg, .jpg" id="image_file"><br />
     </div>
     <div>
-      <button onclick="buttonClicked()">Submit</button>
+      <button type="button" onclick="submitForm()">Submit</button>
     </div>
   </form>
+  <div style="padding: 10pt">
+    <code>
+      <span id="gcode"></span>
+    </code>
+  </div>
   <script>
     document.getElementById('image_file').addEventListener('change', handleFileSelect, false);
   </script>

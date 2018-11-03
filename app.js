@@ -15,7 +15,6 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/gcode', (request, response) => {
-  console.log('Got post request');
   let fileType;
   switch (request.body.type) {
     case 'image/jpeg':
@@ -30,11 +29,14 @@ app.post('/gcode', (request, response) => {
   }
 
   const filePath = require('path').resolve(`./temp/${Date.now()}${fileType}`);
-  fs.writeFile(filePath, request.body.data, 'binary', (err) => {
+  fs.writeFile(filePath, request.body.data, 'binary', async (err) => {
     if (err) {
       response.status(400).send(`error: ${err}`);
     } else {
-      response.send(`File written at: ${filePath}`);
+      const gcodeGenerator = require('./src/gcodegenerator');
+      const gcode = await gcodeGenerator
+          .generateGCode(filePath, {toolDiameter: 1});
+      response.send(gcode);
     }
   });
 });

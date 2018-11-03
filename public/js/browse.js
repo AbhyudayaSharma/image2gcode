@@ -1,4 +1,11 @@
 /* eslint-disable no-unused-vars */
+
+// data to be sent as the body of the POST
+const postData = {
+  data: '',
+  type: '',
+};
+
 /**
  * Button click
  */
@@ -20,26 +27,46 @@ function buttonClicked() {
 function handleFileSelect(evt) {
   const file = evt.target.files[0];
 
-  // Only process image files.
+  // do nothing if no file is selected
+  if (file == null) {
+    postData.type = '';
+    postData.type = '';
+    return;
+  }
+
+  // only allow images
   if (!file.type.match('image.*')) {
     alert('Unsupported Image File');
     document.getElementById('form').reset();
+    postData.type = '';
+    postData.data = '';
     return;
   }
 
   const reader = new FileReader();
   reader.onload = (event) => {
-    const postData = {};
     postData.data = event.target.result;
     postData.type = file.type;
+  };
 
+  // Read in the image file as binary string.
+  reader.readAsBinaryString(file);
+}
+
+/**
+ * Handle the submission of the form
+ */
+const submitForm = () => {
+  if (postData.data.length && postData.type.length) {
+    console.log(postData.data.length, postData.type.length);
     const xhr = new XMLHttpRequest();
     const url = '/gcode';
     xhr.open('POST', url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        console.log(xhr.responseText);
+        document.getElementById('gcode')
+            .innerHTML = xhr.responseText.replace(/\n/g, '<br>');
       } else if (xhr.readyState === 4 && xhr.status === 400) {
         alert(`Error: ${xhr.responseText}`);
         document.getElementById('image_form').reset();
@@ -56,8 +83,7 @@ function handleFileSelect(evt) {
     };
 
     xhr.send(JSON.stringify(postData));
-  };
-
-  // Read in the image file as binary string.
-  reader.readAsBinaryString(file);
-}
+  } else {
+    alert('Please select a file!');
+  }
+};
