@@ -1,31 +1,46 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="utf-8">
   <title>Image2Gcode</title>
   <!-- Bootstrap? -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
     crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
   <script src="public/js/browse.js"></script>
 </head>
 
 <body>
-  <h1>Welcome to Image2Gcode</h1>
-  <p>Converts a JPEG or a PNG image to GCode.</p>
-  <form id="image_form">
-    <div>
-      <label for="image_file">Select an image file: </label>
-      <input type="file" accept=".png, .jpeg, .jpg" id="image_file"><br />
+  <div class="container">
+    <h1>Welcome to Image2Gcode</h1>
+    <p>Converts a JPEG or a PNG image to GCode.</p>
+    <form id="image_form" class="form-horizontal" onsubmit="return false;">
+      <div class="form-group">
+        <label class="btn control-label">Select an image file:
+          <input type="file" accept=".png, .jpeg, .jpg" id="image_file">
+        </label>
+      </div>
+      <h3>Options</h3>
+      <div class="form-group">
+        <label for="tool_diameter" class="control-label">Tool Diameter: </label>
+        <input type="number" id="tool_diameter" class="form-horizontal" min="1">
+      </div>
+      <div>
+        <button type="button" onclick="submitForm()" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+    <div class="container">
+      <code>
+        <span id="gcode"></span>
+      </code>
     </div>
-    <div>
-      <button type="button" onclick="submitForm()">Submit</button>
-    </div>
-  </form>
-  <div style="padding: 10pt">
-    <code>
-      <span id="gcode"></span>
-    </code>
   </div>
   <script>
     document.getElementById('image_file').addEventListener('change', handleFileSelect, false);
