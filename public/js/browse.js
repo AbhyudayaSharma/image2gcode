@@ -66,6 +66,7 @@ const submitForm = () => {
             .innerHTML = xhr.responseText; // .replace(/\n/g, '<br>');
         document.getElementById('gcode_container')
             .setAttribute('style', ''); // make it visible
+        window.scrollTo(0, document.body.scrollHeight); // scroll to bottom
       } else if (xhr.readyState === 4 && xhr.status === 400) {
         alert(`Error: ${xhr.responseText}`);
         resetForm();
