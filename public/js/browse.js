@@ -36,9 +36,7 @@ function handleFileSelect(evt) {
   // only allow images
   if (!file.type.match('image.*')) {
     alert('Unsupported Image File');
-    document.getElementById('form').reset();
-    postData.type = '';
-    postData.data = '';
+    resetForm();
     return;
   }
 
@@ -65,24 +63,40 @@ const submitForm = () => {
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4 && xhr.status === 200) {
         document.getElementById('gcode')
-            .innerHTML = xhr.responseText.replace(/\n/g, '<br>');
+            .innerHTML = xhr.responseText; // .replace(/\n/g, '<br>');
+        document.getElementById('gcode_container')
+            .setAttribute('style', ''); // make it visible
       } else if (xhr.readyState === 4 && xhr.status === 400) {
         alert(`Error: ${xhr.responseText}`);
-        document.getElementById('image_form').reset();
+        resetForm();
       }
     };
 
     xhr.onerror = () => {
       console.log('error');
       alert(`Error: ${xhr.responseText}`);
+      resetForm();
     };
 
     xhr.onabort = () => {
       alert('aborted');
+      resetForm();
     };
 
     xhr.send(JSON.stringify(postData));
   } else {
     alert('Please select a file!');
   }
+};
+
+/**
+ * Resets the form
+ */
+const resetForm = () => {
+  document.getElementById('image_form').reset();
+  document.getElementById('file_name').setAttribute('value', '');
+  document.getElementById('gcode_container')
+      .setAttribute('style', 'display: none;'); // make it invisible
+  postData.data = '';
+  postData.type = '';
 };

@@ -1,7 +1,7 @@
 {
-  "name": "svg2gcode",
-  "version": "0.0.4",
-  "description": "Convert SVG to Gcode",
+  "name": "image2gcode",
+  "version": "0.1.0",
+  "description": "Converts an Image to Gcode",
   "dependencies": {
     "body-parser": "^1.18.3",
     "canvg": "0.0.6",
@@ -22,7 +22,7 @@
     "url": "https://github.com/AbhyudayaSharma/image2gcode.git"
   },
   "keywords": [
-    "svg",
+    "image",
     "gcode",
     "cnc",
     "milling"
