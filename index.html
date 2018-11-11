@@ -4,88 +4,115 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Image2Gcode</title>
+  <title>Image2GCode</title>
 
   <!-- Bootstrap? -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-    crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+          integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+          integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+          integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+          crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/public/css/bootstrap.min.css">
 
   <script src="public/js/browse.js"></script>
   <link rel="stylesheet" href="/public/css/styles.css">
 </head>
 
 <body>
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-8">
-        <div class="jumbotron">
-          <h1>Welcome to Image2GCode</h1>
-          <p class="lead">Converts a JPEG or a PNG image to GCode.</p>
-        </div>
-        <form id="image_form" class="form-horizontal" onsubmit="return false;">
-          <div class="form-group">
-            <label class="btn control-label">Select an image file:
-              <input type="file" accept=".png, .jpeg, .jpg" id="file_selector">
-            </label>
-          </div>
-          <h3>Options</h3>
-          <div class="form-group">
-            <label for="tool_diameter" class="control-label">Tool Diameter: </label>
-            <input type="number" id="tool_diameter" class="form-horizontal" min="1">
-          </div>
-          <div>
-            <button type="button" onclick="submitForm()" class="btn btn-primary">Submit</button>
-            <button type="button" onclick="resetForm()" class="btn">Reset</button>
-          </div>
-        </form>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="jumbotron">
+        <h1>Welcome to Image2GCode</h1>
+        <p class="lead">Converts a JPEG or a PNG image to GCode.</p>
       </div>
-      <div class="col-sm-2"></div>
+      <form id="image_form" class="form-horizontal" onsubmit="return false;">
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Select an image file:</label>
+          <div class="col-sm-5">
+            <input type="file" accept=".png, .jpeg, .jpg" id="file_selector">
+          </div>
+          <div class="col-sm-4"></div>
+        </div>
+        <h3>Options</h3>
+        <div class="form-group row">
+          <label for="tool_diameter" class="col-sm-3 col-form-label">Tool Diameter: </label>
+          <div class="col-sm-5">
+            <input type="number" id="tool_diameter" class="form-control" min="1">
+          </div>
+          <div class="col-sm-4"></div>
+        </div>
+        <div class="form-group row">
+          <label for="feed" class="col-sm-3 col-form-label">Feed: </label>
+          <div class="col-sm-5">
+            <input type="number" id="feed" class="form-control" min="1">
+          </div>
+          <div class="col-sm-4"></div>
+        </div>
+        <div class="form-group row">
+          <label for="retract" class="col-sm-3 col-form-label">Retract: </label>
+          <div class="col-sm-5">
+            <input type="number" id="retract" class="form-control" min="0" value="0">
+          </div>
+          <div class="col-sm-4"></div>
+        </div>
+
+        <div>
+          <button type="button" onclick="submitForm()" class="btn btn-primary" id="submit_btn">Submit</button>
+          <button type="button" onclick="resetForm()" class="btn" id="reset_btn">Reset</button>
+          <div style="padding: 10px;"></div>
+        </div>
+      </form>
     </div>
   </div>
-  <div class="container-fluid" id="gcode_container" style="display: none;">
-    <div class="col-xs-12" style="height:25px;"></div>
-    <div class="row">
-      <div class="col-sm-4"></div>
-      <div class="col-sm-4">
-        <h3>Here's your GCode:</h3>
-        <code>
-          <textarea cols="40" rows="10" readonly id="gcode" class="form-control"></textarea>
-        </code>
-        <div style="padding: 25px"></div>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <button id="copy_clipboard_btn" onclick="copyToClipboard()" class="btn btn-outline-secondary">Copy to clipboard</button>
-            <button id="save_file_button" onclick="writeToFile()" class="btn btn-outline-secondary">Save as a file</button>
-          </div>
+</div>
+
+<div class="col-sm-2"></div>
+<div class="container-fluid" id="gcode_container" style="display: none;">
+  <div class="col-xs-12" style="height:25px;"></div>
+  <div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+      <h3><label for="gcode">Here's your GCode:</label></h3>
+      <code>
+        <textarea cols="40" rows="10" readonly id="gcode" class="form-control"></textarea>
+      </code>
+      <div style="padding: 25px"></div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <button id="copy_clipboard_btn" onclick="copyGCodeToClipboard()" class="btn btn-outline-secondary">Copy to
+            clipboard
+          </button>
+          <button id="save_file_button" onclick="writeToFile()" class="btn btn-outline-secondary">Save as a file
+          </button>
         </div>
       </div>
-      <div class="col-sm-4"></div>
     </div>
+    <div class="col-sm-4"></div>
   </div>
+</div>
 
-  <!-- Footer -->
-  <nav class="navbar fixed-bottom navbar-collapse navbar-dark bg-dark navbar-nav">
-    <div id="navbar-center" class="navbar-text">
-      <p class="small">
-        Copyright © Abhyudaya Sharma, 2018. Licensed under the MIT License.
-      </p>
-      <p class="small">
-        Code hosted on <a href="https://github.com/AbhyudayaSharma/image2gcode.git">Github</a>.
-      </p>
-    </div>
-  </nav>
+<!-- Footer -->
+<nav class="navbar fixed-bottom navbar-collapse navbar-dark bg-dark navbar-nav">
+  <div id="navbar-center" class="navbar-text">
+    <p class="small">
+      Copyright © Abhyudaya Sharma, 2018. Licensed under the MIT License.
+    </p>
+    <p class="small">
+      Code hosted on <a href="https://github.com/AbhyudayaSharma/image2gcode.git" target="_blank">Github</a>.
+    </p>
+  </div>
+</nav>
 
-  <!-- Action Listeners -->
-  <script>
-    document.getElementById('file_selector').addEventListener('change', handleFileSelect, false);
-  </script>
+<!-- Action Listeners -->
+<script>
+  document.getElementById('file_selector').addEventListener('change', handleFileSelect, false);
+</script>
 </body>
 
 </html>

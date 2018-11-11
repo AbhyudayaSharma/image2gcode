@@ -6,6 +6,9 @@ const postData = {
   type: '',
 };
 
+// the post request
+let xhr = new XMLHttpRequest();
+
 /**
  * Button click
  */
@@ -55,8 +58,8 @@ function handleFileSelect(evt) {
  */
 const submitForm = () => {
   if (postData.data.length && postData.type.length) {
+    xhr = new XMLHttpRequest();
     console.log(postData.data.length, postData.type.length);
-    const xhr = new XMLHttpRequest();
     const url = '/gcode';
     xhr.open('POST', url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -64,6 +67,9 @@ const submitForm = () => {
       if (xhr.readyState === 4 && xhr.status === 200) {
         document.getElementById('gcode')
             .innerHTML = xhr.responseText; // .replace(/\n/g, '<br>');
+        document.getElementById('submit_btn').disabled = false;
+        document.getElementById('submit_btn').innerText = 'Submit';
+        document.getElementById('reset_btn').disabled = false;
         document.getElementById('gcode_container')
             .setAttribute('style', ''); // make it visible
         window.scrollTo(0, document.body.scrollHeight); // scroll to bottom
@@ -80,11 +86,15 @@ const submitForm = () => {
     };
 
     xhr.onabort = () => {
-      alert('aborted');
       resetForm();
     };
 
     xhr.send(JSON.stringify(postData));
+    document.getElementById('submit_btn').innerHTML =
+      '<img src="/public/img/loading.gif" width="20px" height="20px" ' +
+      'alt="Loading..."> Generating the GCode may take up to a minute...';
+    document.getElementById('submit_btn').disabled = true;
+    document.getElementById('reset_btn').disabled = true;
   } else {
     alert('Please select a file!');
   }
@@ -95,9 +105,22 @@ const submitForm = () => {
  */
 const resetForm = () => {
   document.getElementById('image_form').reset();
-  document.getElementById('file_name').setAttribute('value', '');
+  document.getElementById('file_selector').setAttribute('value', '');
+  document.getElementById('tool_diameter').setAttribute('value', '');
+  document.getElementById('feed').setAttribute('value', '');
+  document.getElementById('retract').setAttribute('value', '0');
   document.getElementById('gcode_container')
       .setAttribute('style', 'display: none;'); // make it invisible
   postData.data = '';
   postData.type = '';
+};
+
+/**
+ * Copies the GCode from the TextArea to clipboard
+ */
+const copyGCodeToClipboard = () => {
+  const gcode = document.getElementById('gcode');
+  gcode.select();
+  document.execCommand('copy');
+  alert('GCode copied to clipboard!');
 };
