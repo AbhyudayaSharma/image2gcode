@@ -59,7 +59,6 @@ function handleFileSelect(evt) {
 const submitForm = () => {
   if (postData.data.length && postData.type.length) {
     xhr = new XMLHttpRequest();
-    console.log(postData.data.length, postData.type.length);
     const url = '/gcode';
     xhr.open('POST', url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -80,7 +79,6 @@ const submitForm = () => {
     };
 
     xhr.onerror = () => {
-      console.log('error');
       alert(`Error: ${xhr.responseText}`);
       resetForm();
     };
