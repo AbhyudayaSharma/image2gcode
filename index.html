@@ -23,56 +23,57 @@
 </head>
 
 <body>
-<div class="container">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-8">
-      <div class="jumbotron">
-        <h1>Welcome to Image2GCode</h1>
-        <p class="lead">Converts a JPEG or a PNG image to GCode.</p>
+    <div class="col-xs-0 col-sm-2"></div>
+    <div class="col-xs-12 col-sm-8">
+      <div class="container">
+        <div class="jumbotron">
+          <h1>Welcome to Image2GCode</h1>
+          <p class="lead">Converts a JPEG or a PNG image to GCode.</p>
+        </div>
+        <form id="image_form" class="form-horizontal" onsubmit="return false;">
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Select an image file:</label>
+            <div class="col-sm-5">
+              <input type="file" accept=".png, .jpeg, .jpg" id="file_selector">
+            </div>
+            <div class="col-sm-4"></div>
+          </div>
+          <h3>Options</h3>
+          <div class="form-group row">
+            <label for="tool_diameter" class="col-sm-3 col-form-label">Tool Diameter: </label>
+            <div class="col-sm-5">
+              <input type="number" id="tool_diameter" class="form-control" min="1">
+            </div>
+            <div class="col-sm-4"></div>
+          </div>
+          <div class="form-group row">
+            <label for="feed" class="col-sm-3 col-form-label">Feed: </label>
+            <div class="col-sm-5">
+              <input type="number" id="feed" class="form-control" min="1">
+            </div>
+            <div class="col-sm-4"></div>
+          </div>
+          <div class="form-group row">
+            <label for="retract" class="col-sm-3 col-form-label">Retract: </label>
+            <div class="col-sm-5">
+              <input type="number" id="retract" class="form-control" min="0" value="0">
+            </div>
+            <div class="col-sm-4"></div>
+          </div>
+          <div>
+            <button type="button" onclick="submitForm()" class="btn btn-primary" id="submit_btn">Submit</button>
+            <button type="button" onclick="resetForm()" class="btn" id="reset_btn">Reset</button>
+            <div style="padding: 10px;"></div>
+          </div>
+        </form>
       </div>
-      <form id="image_form" class="form-horizontal" onsubmit="return false;">
-        <div class="form-group row">
-          <label class="col-sm-3 col-form-label">Select an image file:</label>
-          <div class="col-sm-5">
-            <input type="file" accept=".png, .jpeg, .jpg" id="file_selector">
-          </div>
-          <div class="col-sm-4"></div>
-        </div>
-        <h3>Options</h3>
-        <div class="form-group row">
-          <label for="tool_diameter" class="col-sm-3 col-form-label">Tool Diameter: </label>
-          <div class="col-sm-5">
-            <input type="number" id="tool_diameter" class="form-control" min="1">
-          </div>
-          <div class="col-sm-4"></div>
-        </div>
-        <div class="form-group row">
-          <label for="feed" class="col-sm-3 col-form-label">Feed: </label>
-          <div class="col-sm-5">
-            <input type="number" id="feed" class="form-control" min="1">
-          </div>
-          <div class="col-sm-4"></div>
-        </div>
-        <div class="form-group row">
-          <label for="retract" class="col-sm-3 col-form-label">Retract: </label>
-          <div class="col-sm-5">
-            <input type="number" id="retract" class="form-control" min="0" value="0">
-          </div>
-          <div class="col-sm-4"></div>
-        </div>
-
-        <div>
-          <button type="button" onclick="submitForm()" class="btn btn-primary" id="submit_btn">Submit</button>
-          <button type="button" onclick="resetForm()" class="btn" id="reset_btn">Reset</button>
-          <div style="padding: 10px;"></div>
-        </div>
-      </form>
     </div>
+    <div class="col-xs-0 col-sm-2"></div>
   </div>
 </div>
 
-<div class="col-sm-2"></div>
 <div class="container-fluid" id="gcode_container" style="display: none;">
   <div class="col-xs-12" style="height:25px;"></div>
   <div class="row">
