@@ -31,7 +31,7 @@ function handleFileSelect(evt) {
 
   // do nothing if no file is selected
   if (file == null) {
-    postData.type = '';
+    postData.data = '';
     postData.type = '';
     return;
   }
@@ -58,11 +58,21 @@ function handleFileSelect(evt) {
  */
 const submitForm = () => {
   if (postData.data.length && postData.type.length) {
+    let options = null;
+    try {
+      options = validateAndGetOptions();
+    } catch (e) {
+      alert(e);
+      return;
+    }
+
+    postData.options = options;
     xhr = new XMLHttpRequest();
     const url = '/gcode';
     xhr.open('POST', url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = () => {
+      delete postData.options; // delete options when not needed.
       if (xhr.readyState === 4 && xhr.status === 200) {
         document.getElementById('gcode')
             .innerHTML = xhr.responseText; // .replace(/\n/g, '<br>');
@@ -104,13 +114,16 @@ const submitForm = () => {
 const resetForm = () => {
   document.getElementById('image_form').reset();
   document.getElementById('file_selector').setAttribute('value', '');
-  document.getElementById('tool_diameter').setAttribute('value', '');
-  document.getElementById('feed').setAttribute('value', '');
+  document.getElementById('tool_diameter').setAttribute('value', '1');
+  document.getElementById('feed').setAttribute('value', '50');
   document.getElementById('retract').setAttribute('value', '0');
   document.getElementById('gcode_container')
       .setAttribute('style', 'display: none;'); // make it invisible
   postData.data = '';
   postData.type = '';
+  document.getElementById('submit_btn').disabled = false;
+  document.getElementById('submit_btn').innerText = 'Submit';
+  document.getElementById('reset_btn').disabled = false;
 };
 
 /**
@@ -123,4 +136,32 @@ const copyGCodeToClipboard = () => {
   alert('GCode copied to clipboard!');
   gcode.selectionStart = 0;
   gcode.selectionEnd = 0;
+};
+
+const validateAndGetOptions = () => {
+  const options = {};
+  let toolDiameter = document.getElementById('tool_diameter').value;
+  toolDiameter = parseInt(Number(toolDiameter), 10);
+  let feed = document.getElementById('feed').value;
+  feed = parseInt(Number(feed), 10);
+  let retract = document.getElementById('retract').value;
+  retract = parseInt(Number(retract), 10);
+
+  // Mandatory
+  if (toolDiameter !== NaN && toolDiameter > 0 && toolDiameter <= 8) {
+    options.toolDiameter = toolDiameter;
+  } else {
+    throw new Error('Tool Diameter should be an integer between 1 and 8');
+  }
+
+  // Not mandatory
+  if (feed !== NaN && feed > 0 && feed <= 100) {
+    options.feed = feed;
+  } else throw new Error('Feed should be an integer between 1 and 100');
+
+  if (retract != NaN && retract >= 0 && retract <= 100) {
+    options.retract = retract;
+  } else throw new Error('Retract should be an integer between 0 and 100');
+
+  return options;
 };

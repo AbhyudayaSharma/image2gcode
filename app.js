@@ -16,6 +16,7 @@ app.get('/', async (req, res) => {
 
 app.post('/gcode', (request, response) => {
   let fileType;
+  // only support png and jpeg
   switch (request.body.type) {
     case 'image/jpeg':
       fileType = '.jpeg';
@@ -28,6 +29,53 @@ app.post('/gcode', (request, response) => {
       return;
   }
 
+  // validate options
+  const requestOptions = request.body.options;
+  const responseOptions = {};
+  const optionsError = false;
+
+  if (!requestOptions.hasOwnProperty('toolDiameter')) {
+    response.status(400).send('Tool Diameter is necessary');
+    return;
+  }
+
+  const toolDiameter = parseInt(Number(requestOptions.toolDiameter));
+  let feed = null;
+  let retract = null;
+
+  if (requestOptions.hasOwnProperty('feed')) {
+    feed = parseInt(Number(requestOptions.feed));
+  }
+
+  if (requestOptions.hasOwnProperty('retract')) {
+    retract = parseInt(Number(requestOptions.retract));
+  }
+
+  // Mandatory
+  if (toolDiameter !== NaN && toolDiameter > 0 && toolDiameter <= 8) {
+    responseOptions.toolDiameter = toolDiameter;
+  } else {
+    optionsError = true;
+  }
+
+  // Not mandatory
+  if (feed !== null && feed !== NaN && feed > 0 && feed <= 100) {
+    responseOptions.feed = feed;
+  } else if (feed !== null) {
+    optionsError = true;
+  }
+
+  if (retract !== null && retract != NaN && retract >= 0 && retract <= 100) {
+    responseOptions.retract = retract;
+  } else if (retract !== null) {
+    optionsError = true;
+  }
+
+  if (optionsError) {
+    res.status(400).send('Incorrect options supplied');
+    return;
+  }
+
   const filePath = require('path').resolve(`./temp/${Date.now()}${fileType}`);
   fs.writeFile(filePath, request.body.data, 'binary', async (err) => {
     if (err) {
@@ -35,7 +83,7 @@ app.post('/gcode', (request, response) => {
     } else {
       const gcodeGenerator = require('./src/gcodegenerator');
       const gcode = await gcodeGenerator
-          .generateGCode(filePath, {toolDiameter: 1});
+          .generateGCode(filePath, responseOptions);
       response.send(gcode);
     }
   });

@@ -27,7 +27,6 @@ const getGcode = (filePath, options) => {
 
   const gctx = new GCanvas();
   const svg = fs.readFileSync(filePath).toString();
-  const canvgOptions = {};
 
   if (options.hasOwnProperty('speed')) {
     gctx.speed = options.speed;
@@ -43,14 +42,6 @@ const getGcode = (filePath, options) => {
 
   if (options.hasOwnProperty('depthOfCut')) {
     gctx.depthOfCut = options.depthOfCut;
-  }
-
-  if (options.hasOwnProperty('width')) {
-    canvgOptions.scaleWidth = options.width;
-  }
-
-  if (options.hasOwnProperty('height')) {
-    canvgOptions.scaleHeight = options.height;
   }
 
   if (options.hasOwnProperty('top')) {
@@ -84,7 +75,7 @@ const getGcode = (filePath, options) => {
   }
 
   return new Promise((resolve, reject) => {
-    canvg(gctx.canvas, svg, canvgOptions);
+    canvg(gctx.canvas, svg);
     ret += 'M30\n';
     if (oldLog != null) {
       console.log = oldLog;
