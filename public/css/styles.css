@@ -7,3 +7,8 @@
 body {
     padding-bottom: 150px;
 }
+
+img.loading {
+    width: 20px;
+    height: 20px;
+}

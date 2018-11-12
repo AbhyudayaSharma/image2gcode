@@ -82,6 +82,9 @@ const submitForm = () => {
         document.getElementById('gcode_container')
             .setAttribute('style', ''); // make it visible
         window.scrollTo(0, document.body.scrollHeight); // scroll to bottom
+        const gcode = document.getElementById('gcode').value;
+        const fileURL = makeTextFile(gcode);
+        document.getElementById('download_btn').setAttribute('href', fileURL);
       } else if (xhr.readyState === 4 && xhr.status === 400) {
         alert(`Error: ${xhr.responseText}`);
         resetForm();
@@ -99,7 +102,7 @@ const submitForm = () => {
 
     xhr.send(JSON.stringify(postData));
     document.getElementById('submit_btn').innerHTML =
-      '<img src="/public/img/loading.gif" width="20px" height="20px" ' +
+      '<img src="/public/img/loading.gif" class="loading"' +
       'alt="Loading..."> Generating the GCode may take up to a minute...';
     document.getElementById('submit_btn').disabled = true;
     document.getElementById('reset_btn').disabled = true;
@@ -138,6 +141,11 @@ const copyGCodeToClipboard = () => {
   gcode.selectionEnd = 0;
 };
 
+/**
+ * Validates the form input
+ * @return {any} an object containing the verified data
+ * @throws {Error} if the data is not valid.
+ */
 const validateAndGetOptions = () => {
   const options = {};
   let toolDiameter = document.getElementById('tool_diameter').value;
@@ -164,4 +172,24 @@ const validateAndGetOptions = () => {
   } else throw new Error('Retract should be an integer between 0 and 100');
 
   return options;
+};
+
+let textFile = null;
+
+/**
+ * Creates a file on the current GCode
+ * @param {String} text the text to be written to the file
+ * @return {String} URL to the file created.
+ */
+const makeTextFile = (text) => {
+  const data = new Blob([text], {type: 'text/plain'});
+
+  // If we are replacing a previously generated file we need to
+  // manually revoke the object URL to avoid memory leaks.
+  if (textFile !== null) {
+    window.URL.revokeObjectURL(textFile);
+  }
+
+  textFile = window.URL.createObjectURL(data);
+  return textFile;
 };
