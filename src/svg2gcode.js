@@ -60,6 +60,8 @@ const getGcode = (filePath, options) => {
     } else {
       gctx.motion.retract();
     }
+  } else if (options.hasOwnProperty('retract')) {
+    gctx.retract = options.retract;
   }
 
   if (options.hasOwnProperty('above')) {
@@ -103,9 +105,7 @@ if (require.main == module) {
       .option('-t, --top <number>', 'z of top of work surface', eval)
       .option('-a, --above <number>', 'z of safe area above the work', eval)
       .option('-D, --tooldiameter <number>', 'diameter of tool', eval)
-      .option('-w, --width', 'width to which the image is to be scaled down',
-          eval)
-      .option('-h, --height', 'height to which the image is to be scaled down',
+      .option('-r, --retract <number>', 'distance to retract for fast moves',
           eval)
       .option('-p, --positive',
           'Treat fill as positive, cutting only around the outside');
@@ -113,7 +113,6 @@ if (require.main == module) {
   program.parse(process.argv);
 
   const options = {};
-  const canvgOptions = {};
   if (program.speed) options.speed = program.speed;
   if (program.feed) options.feed = program.feed;
   if (program.depth) options.depth = program.depth;
@@ -121,8 +120,7 @@ if (require.main == module) {
   if (program.top) options.top = program.top;
   if (program.above) options.aboveTop = program.above;
   if (program.tooldiameter) options.toolDiameter = program.tooldiameter;
-  if (program.width) canvgOptions.scaleHeight = program.height;
-  if (program.height) canvgOptions.scaleWidth = program.width;
+  if (program.retract) options.retract = program.retract;
 
   if (program.args.length === 0 && process.stdin.isTTY) {
     program.outputHelp();
