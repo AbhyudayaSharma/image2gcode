@@ -83,7 +83,7 @@ const submitForm = () => {
             .setAttribute('style', ''); // make it visible
         window.scrollTo(0, document.body.scrollHeight); // scroll to bottom
         const gcode = document.getElementById('gcode').value;
-        const fileURL = makeTextFile(gcode);
+        const fileURL = makeTextFile(gcode.replace(/\n/g, '\r\n')); // CRLF
         document.getElementById('download_btn').setAttribute('href', fileURL);
       } else if (xhr.readyState === 4 && xhr.status === 400) {
         alert(`Error: ${xhr.responseText}`);
