@@ -121,4 +121,6 @@ const copyGCodeToClipboard = () => {
   gcode.select();
   document.execCommand('copy');
   alert('GCode copied to clipboard!');
+  gcode.selectionStart = 0;
+  gcode.selectionEnd = 0;
 };
