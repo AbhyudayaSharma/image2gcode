@@ -15,6 +15,7 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/gcode', (request, response) => {
+  request.socket.setTimeout(1200000); // 20 min
   let fileType;
   // only support png and jpeg
   switch (request.body.type) {
@@ -32,7 +33,7 @@ app.post('/gcode', (request, response) => {
   // validate options
   const requestOptions = request.body.options;
   const responseOptions = {};
-  const optionsError = false;
+  let optionsError = false;
 
   if (!requestOptions.hasOwnProperty('toolDiameter')) {
     response.status(400).send('Tool Diameter is necessary');
@@ -42,6 +43,8 @@ app.post('/gcode', (request, response) => {
   const toolDiameter = parseInt(Number(requestOptions.toolDiameter));
   let feed = null;
   let retract = null;
+  let height = null;
+  let width = null;
 
   if (requestOptions.hasOwnProperty('feed')) {
     feed = parseInt(Number(requestOptions.feed));
@@ -49,6 +52,14 @@ app.post('/gcode', (request, response) => {
 
   if (requestOptions.hasOwnProperty('retract')) {
     retract = parseInt(Number(requestOptions.retract));
+  }
+
+  if (requestOptions.hasOwnProperty('height')) {
+    height = parseInt(Number(requestOptions.height));
+  }
+
+  if (requestOptions.hasOwnProperty('width')) {
+    width = parseInt(Number(requestOptions.width));
   }
 
   // Mandatory
@@ -71,6 +82,17 @@ app.post('/gcode', (request, response) => {
     optionsError = true;
   }
 
+  if (width !== null && width != NaN && width >= 0 && width <= 2000) {
+    responseOptions.width = width;
+  } else if (width !== null) {
+    optionsError = true;
+  }
+  if (height !== null && height != NaN && height >= 0 && height <= 2000) {
+    responseOptions.height = height;
+  } else if (height !== null) {
+    optionsError = true;
+  }
+
   if (optionsError) {
     res.status(400).send('Incorrect options supplied');
     return;
@@ -82,6 +104,7 @@ app.post('/gcode', (request, response) => {
       response.status(400).send(`error: ${err}`);
     } else {
       const gcodeGenerator = require('./src/gcodegenerator');
+      console.log(responseOptions);
       const gcode = await gcodeGenerator
           .generateGCode(filePath, responseOptions);
       response.send(gcode);

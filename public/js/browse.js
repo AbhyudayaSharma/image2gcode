@@ -122,6 +122,7 @@ const resetForm = () => {
   document.getElementById('retract').setAttribute('value', '0');
   document.getElementById('gcode_container')
       .setAttribute('style', 'display: none;'); // make it invisible
+  document.getElementById('max_size').setAttribute('value', '0');
   postData.data = '';
   postData.type = '';
   document.getElementById('submit_btn').disabled = false;
@@ -170,6 +171,17 @@ const validateAndGetOptions = () => {
   if (retract != NaN && retract >= 0 && retract <= 100) {
     options.retract = retract;
   } else throw new Error('Retract should be an integer between 0 and 100');
+
+  const size = Number(document.getElementById('max_size').value);
+  if (size === 1) {
+    options.width = 210;
+    options.height = 297;
+  } else if (size === 2) {
+    options.width = 210;
+    options.height = 148;
+  }
+
+  console.log(options);
 
   return options;
 };
