@@ -5,6 +5,7 @@ as the generator for the GCode. The image is first converted to an SVG
 file and is then traced to GCode.
 
 ![screenshot](./public/img/screenshot.png)
+![screenshot2](./public/img/screenshot2.png)
 
 ## Running the app
 
