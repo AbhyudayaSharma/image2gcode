@@ -15,7 +15,7 @@ let xhr = new XMLHttpRequest();
 function buttonClicked() {
   const file = document.getElementById('image_file').value;
   if (file != null) {
-    document.getElementById('image').innerHTML = `<img src="${file}>"`;
+    document.getElementById('image').innerHTML = `<img src="${file}">`;
   }
   if (window.File && window.FileReader && window.FileList && window.Blob) {
     alert('Supported');
